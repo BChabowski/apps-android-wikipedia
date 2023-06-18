@@ -6,9 +6,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.NonNull
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.test.espresso.IdlingResource
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.wikipedia.Constants
 import org.wikipedia.R
 import org.wikipedia.activity.SingleFragmentActivity
@@ -25,6 +29,7 @@ import org.wikipedia.util.ResourceUtil
 class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callback {
 
     private lateinit var binding: ActivityMainBinding
+    private var mIdlingResource: CountingIdlingResource? = null
 
     private var controlNavTabInFragment = false
     private val onboardingLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
@@ -158,6 +163,14 @@ class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callba
 
     private fun clearToolbarElevation() {
         binding.mainToolbar.elevation = 0f
+    }
+
+    @VisibleForTesting
+    fun getIdlingResource(): IdlingResource? {
+        if (mIdlingResource == null) {
+            mIdlingResource = CountingIdlingResource("GLOBAL")
+        }
+        return mIdlingResource
     }
 
     companion object {
