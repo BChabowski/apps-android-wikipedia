@@ -1,19 +1,14 @@
 package org.wikipedia.model
 
 import android.view.View
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
-import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -37,7 +32,6 @@ class SearchView : BaseView() {
     private val languagesListMatcher = withId(R.id.languages_list_recycler)
     private fun searchHistoryListItemMatcher(itemText: String) = Matchers.allOf(withText(itemText), withParent(withId(R.id.recent_searches_recycler)))
 
-
     fun typeIntoSearchBar(text: String) {
         onView(searchBarMatcher)
             .perform(ViewActions.clearText())
@@ -58,15 +52,6 @@ class SearchView : BaseView() {
         typeIntoSearchBar("")
     }
 
-    fun clickOnNthResult(itemIndex: Int) {
-        onView(searchResultListMatcher).perform(
-            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                itemIndex,
-                ViewActions.click()
-            )
-        )
-    }
-
     fun addSearchLanguage(language: String) {
         onView(addNewLanguageSearchButtonMatcher).perform(ViewActions.click())
         onView(addNewLanguageButtonMatcher).perform(ViewActions.click())
@@ -80,15 +65,12 @@ class SearchView : BaseView() {
 
     fun changeSearchLanguage(languageAbbreviation: String) {
         onView(withText(languageAbbreviation)).perform(ViewActions.click())
+        //todo use smart wait instead
+        TestUtil.delay(2)
     }
 
-    fun searchResultsShouldContainItems(vararg items: String) {
-        TestUtil.delay(2)
-        for (item: String in items) {
-            onView(searchResultListItemMatcher(item)).check(
-                matches(isDisplayed())
-            )
-        }
+    fun clickSearchResultItemWithText(text: String) {
+        onView(searchResultListItemMatcher(text)).perform(ViewActions.click())
     }
 
     fun resultsListShouldBeEmpty() {
@@ -96,44 +78,13 @@ class SearchView : BaseView() {
     }
 
     fun searchHistoryShouldContainItems(vararg items: String) {
+        //todo użyć metody pobierającej text wszystkich itemów recyclerview
         for (item: String in items) {
             onView(searchHistoryListItemMatcher(item)).check(
                 matches(
                     isDisplayed()
                 )
             )
-        }
-    }
-
-    private fun getText(matcher: ViewInteraction): String {
-        var text = String()
-        matcher.perform(object : ViewAction {
-            override fun getConstraints(): Matcher<View> {
-                return isAssignableFrom(TextView::class.java)
-            }
-
-            override fun getDescription(): String {
-                return "Text of the view"
-            }
-
-            override fun perform(uiController: UiController, view: View) {
-                val tv = view as TextView
-                text = tv.text.toString()
-            }
-        })
-
-        return text
-    }
-
-    private fun recyclerViewSizeMatcher(matcherSize: Int): Matcher<View?>? {
-        return object : BoundedMatcher<View?, RecyclerView>(RecyclerView::class.java) {
-            override fun describeTo(description: Description) {
-                description.appendText("with list size: $matcherSize")
-            }
-
-            override fun matchesSafely(recyclerView: RecyclerView): Boolean {
-                return matcherSize == recyclerView.adapter!!.itemCount
-            }
         }
     }
 }

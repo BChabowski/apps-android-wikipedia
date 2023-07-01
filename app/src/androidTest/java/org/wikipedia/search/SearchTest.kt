@@ -9,14 +9,14 @@ import org.wikipedia.model.OnboardingView
 import org.wikipedia.model.SearchView
 
 class SearchTest : BaseTest() {
-    //todo getText() do BaseView - może poprawić samą funkcję
     //todo dopisać metodę na pobieranie tekstu z recyclerview
     //todo mądre waity
     //todo pomijanie onboardingu za pomocą intenta/shared preferences
 
-
     @Test
     fun searchAndDisplayArticle() {
+        val searchQuery = "Barack Obama"
+
         OnboardingView().run {
             skipOnboarding()
         }
@@ -24,9 +24,8 @@ class SearchTest : BaseTest() {
             clickSearchBar()
         }
         SearchView().run {
-            typeIntoSearchBar("Barack Obama")
-            searchResultsShouldContainItems("Barack Obama")
-            clickOnNthResult(0)
+            typeIntoSearchBar(searchQuery)
+            clickSearchResultItemWithText(searchQuery)
         }
         ArticleView().run {
             articleViewShouldBeDisplayed()
@@ -35,6 +34,8 @@ class SearchTest : BaseTest() {
 
     @Test
     fun searchNotExistingArticle() {
+        val notExistingArticle = "articlenotexisting"
+
         OnboardingView().run {
             skipOnboarding()
         }
@@ -42,7 +43,7 @@ class SearchTest : BaseTest() {
             clickSearchBar()
         }
         SearchView().run {
-            typeIntoSearchBar("articlenotexisting")
+            typeIntoSearchBar(notExistingArticle)
             resultsListShouldBeEmpty()
         }
     }
@@ -50,6 +51,7 @@ class SearchTest : BaseTest() {
     @Test
     fun changeLanguageInSearch() {
         val language = "Русский"
+        val languageAbbreviation = "RU"
         val searchQuery = "Обама, Барак"
 
         OnboardingView().run {
@@ -61,9 +63,8 @@ class SearchTest : BaseTest() {
         SearchView().run {
             addSearchLanguage(language)
             putIntoSearchBar(searchQuery)
-            changeSearchLanguage("RU")
-            searchResultsShouldContainItems(searchQuery)
-            clickOnNthResult(0)
+            changeSearchLanguage(languageAbbreviation)
+            clickSearchResultItemWithText(searchQuery)
         }
         ArticleView().run {
             articleViewShouldBeDisplayed()
@@ -83,12 +84,12 @@ class SearchTest : BaseTest() {
         }
         SearchView().run {
             typeIntoSearchBar(firstSearchQuery)
-            clickOnNthResult(0)
+            clickSearchResultItemWithText(firstSearchQuery)
         }
         BaseView().pressBack()
         SearchView().run {
             typeIntoSearchBar(secondSearchQuery)
-            clickOnNthResult(0)
+            clickSearchResultItemWithText(secondSearchQuery)
         }
         BaseView().pressBack()
         SearchView().run {
