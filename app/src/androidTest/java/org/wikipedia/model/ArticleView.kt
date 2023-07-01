@@ -9,8 +9,7 @@ import org.wikipedia.R
 class ArticleView: BaseView() {
     private val articleWebView = R.id.page_web_view
 
-    fun articleViewShouldBeDisplayed(): ArticleView {
+    fun articleViewShouldBeDisplayed() {
         onView(withId(articleWebView)).check(ViewAssertions.matches(isDisplayed()))
-        return this
     }
 }

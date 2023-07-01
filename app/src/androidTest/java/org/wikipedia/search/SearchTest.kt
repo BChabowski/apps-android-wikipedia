@@ -1,73 +1,100 @@
 package org.wikipedia.search
 
-import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.IdlingResource
-import org.junit.Before
 import org.junit.Test
 import org.wikipedia.BaseTest
-import org.wikipedia.main.MainActivity
+import org.wikipedia.model.ArticleView
+import org.wikipedia.model.BaseView
+import org.wikipedia.model.MainView
 import org.wikipedia.model.OnboardingView
+import org.wikipedia.model.SearchView
 
 class SearchTest : BaseTest() {
-    var mIdlingResource: IdlingResource? = null
-
-    @Before
-    fun registerIdlingResources() {
-        mActivityTestRule.scenario.onActivity {
-            fun perform(activity: MainActivity) {
-                mIdlingResource = activity.getIdlingResource()
-                // To prove that the test fails, omit this call:
-                IdlingRegistry.getInstance().register(mIdlingResource);
-            }
-        }
-    }
+    //todo matchery w klasach pom zamiast idków/text hintów
+    //todo getText() do BaseView - może poprawić samą funkcję
+    //todo dopisać metodę na pobieranie tekstu z recyclerview
+    //todo mądre waity
+    //todo pomijanie onboardingu za pomocą intenta/shared preferences
 
 
     @Test
     fun searchAndDisplayArticle() {
-        OnboardingView().skipOnboarding()
-            .clickSearchBar()
-            .typeIntoSearchBar("Barack Obama")
-            .clickOnNthResult(0)
-            .articleViewShouldBeDisplayed()
+        OnboardingView().run {
+            skipOnboarding()
+        }
+        MainView().run {
+            clickSearchBar()
+        }
+        SearchView().run {
+            typeIntoSearchBar("Barack Obama")
+            searchResultsShouldContainItems("Barack Obama")
+            clickOnNthResult(0)
+        }
+        ArticleView().run {
+            articleViewShouldBeDisplayed()
+        }
     }
-
-    //search after picking search from bottom bar
 
     @Test
     fun searchNotExistingArticle() {
-        OnboardingView().skipOnboarding()
-            .clickSearchBar()
-            .typeIntoSearchBar("articlenotexisting")
-            .resultsListShouldBeEmpty()
+        OnboardingView().run {
+            skipOnboarding()
+        }
+        MainView().run {
+            clickSearchBar()
+        }
+        SearchView().run {
+            typeIntoSearchBar("articlenotexisting")
+            resultsListShouldBeEmpty()
+        }
     }
 
     @Test
     fun changeLanguageInSearch() {
-        val language = "Ру́сский"
+        val language = "Русский"
         val searchQuery = "Обама, Барак"
 
-        OnboardingView().skipOnboarding()
-            .clickSearchBar()
-            .addSearchLanguage(language)
-            .typeIntoSearchBar(searchQuery)
-            .resultsListShouldBeEmpty()
-            .changeSearchLanguage(language)
-            .clickOnNthResult(0)
-            .articleViewShouldBeDisplayed()
+        OnboardingView().run {
+            skipOnboarding()
+        }
+        MainView().run {
+            clickSearchBar()
+        }
+        SearchView().run {
+            addSearchLanguage(language)
+            putIntoSearchBar(searchQuery)
+            changeSearchLanguage("RU")
+            searchResultsShouldContainItems(searchQuery)
+            clickOnNthResult(0)
+        }
+        ArticleView().run {
+            articleViewShouldBeDisplayed()
+        }
     }
 
     @Test
     fun searchHistoryShouldBeVisible() {
-        OnboardingView().skipOnboarding()
-            .clickSearchBar()
-            .typeIntoSearchBar("Barack Obama")
-            .clickOnNthResult(0)
-            .pressBackToSearchView()
-            .typeIntoSearchBar("Joe Biden")
-            .clickOnNthResult(0)
-            .pressBackToSearchView()
-            .clearSearchBar()
-            .searchHistoryShouldContainItems("Barack Obama", "Joe Biden")
+        val firstSearchQuery = "Barack Obama"
+        val secondSearchQuery = "Joe Biden"
+
+        OnboardingView().run {
+            skipOnboarding()
+        }
+        MainView().run {
+            clickSearchBar()
+        }
+        SearchView().run {
+            typeIntoSearchBar(firstSearchQuery)
+            clickOnNthResult(0)
+        }
+        BaseView().pressBack()
+        SearchView().run {
+            typeIntoSearchBar(secondSearchQuery)
+            clickOnNthResult(0)
+        }
+        BaseView().pressBack()
+        SearchView().run {
+            clearSearchBar()
+            searchHistoryShouldContainItems(firstSearchQuery, secondSearchQuery)
+        }
     }
 }

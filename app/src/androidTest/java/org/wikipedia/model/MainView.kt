@@ -9,7 +9,7 @@ import org.wikipedia.R
 class MainView: BaseView() {
     private val searchBarId = R.id.search_container
 
-    fun clickSearchBar(): SearchView {
+    fun clickSearchBar() {
         Espresso.onView(
             Matchers.allOf(
                 ViewMatchers.withId(searchBarId),
@@ -17,6 +17,5 @@ class MainView: BaseView() {
             )
         )
             .perform(ViewActions.click())
-        return SearchView()
     }
 }

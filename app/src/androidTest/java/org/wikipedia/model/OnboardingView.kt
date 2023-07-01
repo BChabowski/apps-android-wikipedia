@@ -9,7 +9,7 @@ import org.wikipedia.R
 class OnboardingView: BaseView() {
     private val skipButtonId = R.id.fragment_onboarding_skip_button
 
-    fun skipOnboarding(): MainView {
+    fun skipOnboarding() {
         Espresso.onView(
             Matchers.allOf(
                 ViewMatchers.withId(skipButtonId),
@@ -17,6 +17,5 @@ class OnboardingView: BaseView() {
             )
         )
             .perform(ViewActions.click())
-        return MainView()
     }
 }
