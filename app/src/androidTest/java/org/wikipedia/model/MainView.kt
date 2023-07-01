@@ -7,15 +7,11 @@ import org.hamcrest.Matchers
 import org.wikipedia.R
 
 class MainView: BaseView() {
-    private val searchBarId = R.id.search_container
+    private val searchBarMatcher = Matchers.allOf(ViewMatchers.withId(R.id.search_container),
+        ViewMatchers.isDisplayed())
 
     fun clickSearchBar() {
-        Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(searchBarId),
-                ViewMatchers.isDisplayed()
-            )
-        )
+        Espresso.onView(searchBarMatcher)
             .perform(ViewActions.click())
     }
 }

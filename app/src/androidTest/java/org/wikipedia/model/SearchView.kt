@@ -27,19 +27,19 @@ import org.wikipedia.R
 import org.wikipedia.TestUtil
 
 class SearchView : BaseView() {
-    private val searchBarHint = "Search Wikipedia"
-    private val searchResultList = R.id.search_results_list
-    private val emptySearchResultsMessage = R.id.results_text
-    private val addNewLanguageSearchButton = R.id.search_lang_button
-    private val addNewLanguageText = "Add language"
-    private val languagesList = R.id.languages_list_recycler
+    private val searchBarMatcher = ViewMatchers.withHint("Search Wikipedia")
+    private val searchResultListMatcher =
+        Matchers.allOf(withId(R.id.search_results_list), isDisplayed())
+    private fun searchResultListItemMatcher(itemText: String) = Matchers.allOf(searchResultListMatcher, hasDescendant(withText(itemText)))
+    private val emptySearchResultsMessageMatcher = withId(R.id.results_text)
+    private val addNewLanguageSearchButtonMatcher = withId(R.id.search_lang_button)
+    private val addNewLanguageButtonMatcher = withText("Add language")
+    private val languagesListMatcher = withId(R.id.languages_list_recycler)
+    private fun searchHistoryListItemMatcher(itemText: String) = Matchers.allOf(withText(itemText), withParent(withId(R.id.recent_searches_recycler)))
 
-    //do szukania jęz id	@id/search_input
-    private val searchLanguagesHolder = R.id.horizontal_scroll_languages
-    private val searchHistory = R.id.recent_searches_recycler
 
     fun typeIntoSearchBar(text: String) {
-        onView(ViewMatchers.withHint(searchBarHint))
+        onView(searchBarMatcher)
             .perform(ViewActions.clearText())
             .perform(ViewActions.typeText(text))
 
@@ -48,7 +48,7 @@ class SearchView : BaseView() {
     }
 
     fun putIntoSearchBar(text: String) {
-        onView(ViewMatchers.withHint(searchBarHint))
+        onView(searchBarMatcher)
             .perform(ViewActions.replaceText(text))
 
         TestUtil.delay(2)
@@ -59,12 +59,7 @@ class SearchView : BaseView() {
     }
 
     fun clickOnNthResult(itemIndex: Int) {
-        onView(
-            Matchers.allOf(
-                withId(searchResultList),
-                isDisplayed()
-            )
-        ).perform(
+        onView(searchResultListMatcher).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 itemIndex,
                 ViewActions.click()
@@ -73,9 +68,9 @@ class SearchView : BaseView() {
     }
 
     fun addSearchLanguage(language: String) {
-        onView(withId(addNewLanguageSearchButton)).perform(ViewActions.click())
-        onView(withText(addNewLanguageText)).perform(ViewActions.click())
-        onView(withId(languagesList)).perform(
+        onView(addNewLanguageSearchButtonMatcher).perform(ViewActions.click())
+        onView(addNewLanguageButtonMatcher).perform(ViewActions.click())
+        onView(languagesListMatcher).perform(
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                 hasDescendant(withText(language)), ViewActions.click()
             )
@@ -90,19 +85,19 @@ class SearchView : BaseView() {
     fun searchResultsShouldContainItems(vararg items: String) {
         TestUtil.delay(2)
         for (item: String in items) {
-            onView(Matchers.allOf(withId(searchResultList), hasDescendant(withText(item)))).check(
+            onView(searchResultListItemMatcher(item)).check(
                 matches(isDisplayed())
             )
         }
     }
 
     fun resultsListShouldBeEmpty() {
-        Assert.assertEquals("No results", getText(onView(withId(emptySearchResultsMessage))))
+        Assert.assertEquals("No results", getText(onView(emptySearchResultsMessageMatcher)))
     }
 
     fun searchHistoryShouldContainItems(vararg items: String) {
         for (item: String in items) {
-            onView(Matchers.allOf(withText(item), withParent(withId(searchHistory)))).check(
+            onView(searchHistoryListItemMatcher(item)).check(
                 matches(
                     isDisplayed()
                 )

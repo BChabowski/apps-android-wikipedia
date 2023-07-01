@@ -9,7 +9,6 @@ import org.wikipedia.model.OnboardingView
 import org.wikipedia.model.SearchView
 
 class SearchTest : BaseTest() {
-    //todo matchery w klasach pom zamiast idków/text hintów
     //todo getText() do BaseView - może poprawić samą funkcję
     //todo dopisać metodę na pobieranie tekstu z recyclerview
     //todo mądre waity

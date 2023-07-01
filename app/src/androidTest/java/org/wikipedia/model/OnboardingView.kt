@@ -7,15 +7,11 @@ import org.hamcrest.Matchers
 import org.wikipedia.R
 
 class OnboardingView: BaseView() {
-    private val skipButtonId = R.id.fragment_onboarding_skip_button
+    private val skipButtonMatcher = Matchers.allOf(
+        ViewMatchers.withId(R.id.fragment_onboarding_skip_button), ViewMatchers.isDisplayed())
 
     fun skipOnboarding() {
-        Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(skipButtonId),
-                ViewMatchers.isDisplayed()
-            )
-        )
+        Espresso.onView(skipButtonMatcher)
             .perform(ViewActions.click())
     }
 }

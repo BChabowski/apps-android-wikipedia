@@ -7,9 +7,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.wikipedia.R
 
 class ArticleView: BaseView() {
-    private val articleWebView = R.id.page_web_view
+    private val articleWebViewMatcher = withId(R.id.page_web_view)
 
     fun articleViewShouldBeDisplayed() {
-        onView(withId(articleWebView)).check(ViewAssertions.matches(isDisplayed()))
+        onView(articleWebViewMatcher).check(ViewAssertions.matches(isDisplayed()))
     }
 }
