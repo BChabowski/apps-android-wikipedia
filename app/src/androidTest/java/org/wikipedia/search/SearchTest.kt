@@ -9,8 +9,6 @@ import org.wikipedia.model.OnboardingView
 import org.wikipedia.model.SearchView
 
 class SearchTest : BaseTest() {
-    //todo dopisać metodę na pobieranie tekstu z recyclerview
-    //todo mądre waity
     //todo pomijanie onboardingu za pomocą intenta/shared preferences
 
     @Test

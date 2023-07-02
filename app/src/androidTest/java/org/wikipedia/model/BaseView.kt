@@ -3,11 +3,17 @@ package org.wikipedia.model
 import android.view.View
 import android.widget.TextView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matcher
+import org.wikipedia.TestUtil
+import java.lang.IllegalStateException
 
 open class BaseView {
     fun pressBack() {
@@ -32,5 +38,26 @@ open class BaseView {
         })
 
         return text
+    }
+
+    protected fun clickWithWait(view: Matcher<View>) {
+        waitFor(view)
+        onView(view).perform(ViewActions.click())
+    }
+
+    protected fun waitFor(viewToMatch: Matcher<View>) {
+        val timeoutInMilliseconds = 2000
+        var counter = 0
+        do {
+            try {
+                onView(viewToMatch)
+                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+                return
+            } catch (_: NoMatchingViewException) {
+                onView(ViewMatchers.isRoot()).perform(TestUtil.waitOnId(250))
+                counter += 250
+            }
+        } while (counter < timeoutInMilliseconds)
+        throw IllegalStateException("No view found in specified time: $timeoutInMilliseconds")
     }
 }
