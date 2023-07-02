@@ -25,6 +25,7 @@ import org.wikipedia.util.ResourceUtil
 class MainActivity : SingleFragmentActivity<MainFragment>(), MainFragment.Callback {
 
     private lateinit var binding: ActivityMainBinding
+
     private var controlNavTabInFragment = false
     private val onboardingLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 
