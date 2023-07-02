@@ -46,15 +46,16 @@ open class BaseView {
     }
 
     protected fun waitFor(viewToMatch: Matcher<View>) {
-        val timeoutInMilliseconds = 2000
-        var counter = 0
+        val timeoutInMilliseconds = 2000L
+        val pollInterval = 250L
+        var counter = 0L
         do {
             try {
                 onView(viewToMatch)
                     .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
                 return
             } catch (_: NoMatchingViewException) {
-                onView(ViewMatchers.isRoot()).perform(TestUtil.waitOnId(250))
+                onView(ViewMatchers.isRoot()).perform(TestUtil.waitOnId(pollInterval))
                 counter += 250
             }
         } while (counter < timeoutInMilliseconds)

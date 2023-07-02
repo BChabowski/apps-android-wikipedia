@@ -1,23 +1,23 @@
 package org.wikipedia.search
 
+import org.junit.Before
 import org.junit.Test
 import org.wikipedia.BaseTest
 import org.wikipedia.model.ArticleView
 import org.wikipedia.model.BaseView
 import org.wikipedia.model.MainView
-import org.wikipedia.model.OnboardingView
 import org.wikipedia.model.SearchView
 
 class SearchTest : BaseTest() {
-    //todo pomijanie onboardingu za pomocą intenta/shared preferences
+    @Before
+    fun startActivity() {
+        launchMainActivityWithDefaultPreferences()
+    }
 
     @Test
     fun searchAndDisplayArticle() {
         val searchQuery = "Barack Obama"
 
-        OnboardingView().run {
-            skipOnboarding()
-        }
         MainView().run {
             clickSearchBar()
         }
@@ -34,9 +34,6 @@ class SearchTest : BaseTest() {
     fun searchNotExistingArticle() {
         val notExistingArticle = "articlenotexisting"
 
-        OnboardingView().run {
-            skipOnboarding()
-        }
         MainView().run {
             clickSearchBar()
         }
@@ -52,9 +49,6 @@ class SearchTest : BaseTest() {
         val languageAbbreviation = "RU"
         val searchQuery = "Обама, Барак"
 
-        OnboardingView().run {
-            skipOnboarding()
-        }
         MainView().run {
             clickSearchBar()
         }
@@ -74,9 +68,6 @@ class SearchTest : BaseTest() {
         val firstSearchQuery = "Barack Obama"
         val secondSearchQuery = "Joe Biden"
 
-        OnboardingView().run {
-            skipOnboarding()
-        }
         MainView().run {
             clickSearchBar()
         }
