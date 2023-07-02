@@ -477,50 +477,50 @@ class SmokeTests {
         TestUtil.delay(1)
 
         // Go to Saved tab
-//        onView(withId(NavTab.READING_LISTS.id())).perform(click())
-//
-//        TestUtil.delay(1)
-//
-//        // Click on first item in the list
-//        onView(withId(R.id.recycler_view))
-//            .perform(actionOnItemAtPosition<ViewHolder>(0, click()))
-//
-//        // Waiting for the article to be saved to the database
-//        TestUtil.delay(5)
-//
-//        // Dismiss tooltip, if any
-//        onView(allOf(withId(R.id.buttonView)))
-//            .inRoot(withDecorView(not(`is`(activity.window.decorView))))
-//            .perform(click())
-//
-//        TestUtil.delay(1)
-//
-//        // Make sure one of the list item matches the title that we expect
-//        onView(allOf(withId(R.id.page_list_item_title), withText(ARTICLE_TITLE), isDisplayed()))
-//            .check(matches(withText(ARTICLE_TITLE)))
-//
-//        TestUtil.setAirplaneMode(true)
-//
-//        TestUtil.delay(2)
-//
-//        onView(allOf(withId(R.id.page_list_item_title), withText(ARTICLE_TITLE), isDisplayed()))
-//            .perform(click())
-//
-//        TestUtil.delay(5)
-//
-//        // Click on bookmark icon and open the menu
-//        onView(withId(R.id.page_save)).perform(click())
-//
-//        TestUtil.delay(2)
-//
-//        // Remove article from reading list
-//        onView(withText("Remove from Saved")).perform(click())
-//
-//        TestUtil.delay(2)
-//
-//        TestUtil.setAirplaneMode(false)
-//
-//        TestUtil.delay(2)
+        onView(withId(NavTab.READING_LISTS.id)).perform(click())
+
+        TestUtil.delay(1)
+
+        // Click on first item in the list
+        onView(withId(R.id.recycler_view))
+            .perform(actionOnItemAtPosition<ViewHolder>(0, click()))
+
+        // Waiting for the article to be saved to the database
+        TestUtil.delay(5)
+
+        // Dismiss tooltip, if any
+        onView(allOf(withId(R.id.buttonView)))
+            .inRoot(withDecorView(not(`is`(activity.window.decorView))))
+            .perform(click())
+
+        TestUtil.delay(1)
+
+        // Make sure one of the list item matches the title that we expect
+        onView(allOf(withId(R.id.page_list_item_title), withText(ARTICLE_TITLE), isDisplayed()))
+            .check(matches(withText(ARTICLE_TITLE)))
+
+        TestUtil.setAirplaneMode(true)
+
+        TestUtil.delay(2)
+
+        onView(allOf(withId(R.id.page_list_item_title), withText(ARTICLE_TITLE), isDisplayed()))
+            .perform(click())
+
+        TestUtil.delay(5)
+
+        // Click on bookmark icon and open the menu
+        onView(withId(R.id.page_save)).perform(click())
+
+        TestUtil.delay(2)
+
+        // Remove article from reading list
+        onView(withText("Remove from Saved")).perform(click())
+
+        TestUtil.delay(2)
+
+        TestUtil.setAirplaneMode(false)
+
+        TestUtil.delay(2)
     }
 
     companion object {
