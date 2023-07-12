@@ -1,14 +1,19 @@
 package org.wikipedia.search
 
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.wikipedia.BaseTest
-import org.wikipedia.model.ArticleView
-import org.wikipedia.model.BaseView
-import org.wikipedia.model.MainView
-import org.wikipedia.model.SearchView
+import org.wikipedia.pageobjects.ArticlePage
+import org.wikipedia.pageobjects.MainPage
+import org.wikipedia.pageobjects.SearchPage
 
 class SearchTest : BaseTest() {
+    private val mainPage = MainPage()
+    private val searchPage = SearchPage()
+    private val articlePage = ArticlePage()
+
     @Before
     fun startActivity() {
         launchMainActivityWithDefaultPreferences()
@@ -18,29 +23,28 @@ class SearchTest : BaseTest() {
     fun searchAndDisplayArticle() {
         val searchQuery = "Barack Obama"
 
-        MainView().run {
-            clickSearchBar()
-        }
-        SearchView().run {
+        mainPage.clickSearchBar()
+
+        searchPage.run {
             typeIntoSearchBar(searchQuery)
             clickSearchResultItemWithText(searchQuery)
         }
-        ArticleView().run {
-            articleViewShouldBeDisplayed()
-        }
+
+        val isArticleDisplayed = articlePage.isArticleViewDisplayed()
+        assertTrue("Article is not visible", isArticleDisplayed)
     }
 
     @Test
     fun searchNotExistingArticle() {
         val notExistingArticle = "articlenotexisting"
 
-        MainView().run {
-            clickSearchBar()
-        }
-        SearchView().run {
+        mainPage.clickSearchBar()
+
+        val searchListText = searchPage.run {
             typeIntoSearchBar(notExistingArticle)
-            resultsListShouldBeEmpty()
+            getResultsListText()
         }
+        assertEquals("No results", searchListText)
     }
 
     @Test
@@ -49,18 +53,17 @@ class SearchTest : BaseTest() {
         val languageAbbreviation = "RU"
         val searchQuery = "Обама, Барак"
 
-        MainView().run {
-            clickSearchBar()
-        }
-        SearchView().run {
+        mainPage.clickSearchBar()
+
+        searchPage.run {
             addSearchLanguage(language)
             putIntoSearchBar(searchQuery)
             changeSearchLanguage(languageAbbreviation)
             clickSearchResultItemWithText(searchQuery)
         }
-        ArticleView().run {
-            articleViewShouldBeDisplayed()
-        }
+
+        val isArticleDisplayed = articlePage.isArticleViewDisplayed()
+        assertTrue("Article is not visible", isArticleDisplayed)
     }
 
     @Test
@@ -68,22 +71,26 @@ class SearchTest : BaseTest() {
         val firstSearchQuery = "Barack Obama"
         val secondSearchQuery = "Joe Biden"
 
-        MainView().run {
-            clickSearchBar()
-        }
-        SearchView().run {
+        mainPage.clickSearchBar()
+
+        searchPage.run {
             typeIntoSearchBar(firstSearchQuery)
             clickSearchResultItemWithText(firstSearchQuery)
         }
-        BaseView().pressBack()
-        SearchView().run {
+
+        articlePage.pressBack()
+
+        searchPage.run {
             typeIntoSearchBar(secondSearchQuery)
             clickSearchResultItemWithText(secondSearchQuery)
         }
-        BaseView().pressBack()
-        SearchView().run {
+
+        articlePage.pressBack()
+
+        val historyContainsItems = searchPage.run {
             clearSearchBar()
-            searchHistoryShouldContainItems(firstSearchQuery, secondSearchQuery)
+            searchHistoryContainsItems(firstSearchQuery, secondSearchQuery)
         }
+        assertTrue("Search history doesn't contain all required items", historyContainsItems)
     }
 }

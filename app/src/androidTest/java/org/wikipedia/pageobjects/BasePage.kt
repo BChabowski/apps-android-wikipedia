@@ -1,4 +1,4 @@
-package org.wikipedia.model
+package org.wikipedia.pageobjects
 
 import android.view.View
 import android.widget.TextView
@@ -7,7 +7,6 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -15,14 +14,14 @@ import org.hamcrest.Matcher
 import org.wikipedia.TestUtil
 import java.lang.IllegalStateException
 
-open class BaseView {
+open class BasePage {
     fun pressBack() {
         Espresso.pressBack()
     }
 
-     protected fun getText(matcher: ViewInteraction): String {
+    protected fun getText(matcher: Matcher<View>): String {
         var text = String()
-        matcher.perform(object : ViewAction {
+        onView(matcher).perform(object : ViewAction {
             override fun getConstraints(): Matcher<View> {
                 return ViewMatchers.isAssignableFrom(TextView::class.java)
             }
@@ -60,5 +59,14 @@ open class BaseView {
             }
         } while (counter < timeoutInMilliseconds)
         throw IllegalStateException("No view found in specified time: $timeoutInMilliseconds")
+    }
+
+    protected fun isViewDisplayed(matcher: Matcher<View>): Boolean {
+        try {
+            onView(matcher).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        } catch (e: NoMatchingViewException) {
+            return false
+        }
+        return true
     }
 }

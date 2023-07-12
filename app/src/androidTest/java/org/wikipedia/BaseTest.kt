@@ -13,9 +13,7 @@ import org.wikipedia.main.MainActivity
 open class BaseTest {
     protected fun getSharedPreferencesEditor(): SharedPreferences.Editor {
         val targetContext = getInstrumentation().targetContext
-        val preferencesEditor = PreferenceManager.getDefaultSharedPreferences(targetContext).edit()
-        preferencesEditor.clear()
-        return preferencesEditor
+        return PreferenceManager.getDefaultSharedPreferences(targetContext).edit()
     }
 
     protected fun launchActivityWithPreferences(
@@ -28,6 +26,7 @@ open class BaseTest {
 
     protected fun launchMainActivityWithDefaultPreferences() {
         val preferencesEditor = getSharedPreferencesEditor()
+        preferencesEditor.clear()
         preferencesEditor.putBoolean("initialOnboardingEnabled", false)
         launchActivityWithPreferences(MainActivity::class.java, preferencesEditor)
     }

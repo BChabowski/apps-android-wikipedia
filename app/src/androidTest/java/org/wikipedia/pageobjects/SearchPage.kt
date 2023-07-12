@@ -1,7 +1,8 @@
-package org.wikipedia.model
+package org.wikipedia.pageobjects
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -12,10 +13,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.Matchers
-import org.junit.Assert
 import org.wikipedia.R
 
-class SearchView : BaseView() {
+class SearchPage : BasePage() {
     private val searchBarMatcher = ViewMatchers.withHint("Search Wikipedia")
     private val searchResultListMatcher =
         Matchers.allOf(withId(R.id.search_results_list), isDisplayed())
@@ -61,18 +61,17 @@ class SearchView : BaseView() {
         clickWithWait(searchResultListItemMatcher(text))
     }
 
-    fun resultsListShouldBeEmpty() {
+    fun getResultsListText(): String {
         waitFor(emptySearchResultsMessageMatcher)
-        Assert.assertEquals("No results", getText(onView(emptySearchResultsMessageMatcher)))
+        return getText(emptySearchResultsMessageMatcher)
     }
 
-    fun searchHistoryShouldContainItems(vararg items: String) {
+    fun searchHistoryContainsItems(vararg items: String): Boolean {
         for (item: String in items) {
-            onView(searchHistoryListItemMatcher(item)).check(
-                matches(
-                    isDisplayed()
-                )
-            )
+            if(!isViewDisplayed(searchHistoryListItemMatcher(item))){
+                return false
+            }
         }
+        return true
     }
 }
