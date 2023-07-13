@@ -8,11 +8,14 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import org.hamcrest.Matcher
 import org.wikipedia.TestUtil
-import java.lang.IllegalStateException
+import org.wikipedia.testutils.DefaultTestTimeouts
 
 open class BasePage {
     fun pressBack() {
@@ -23,7 +26,7 @@ open class BasePage {
         var text = String()
         onView(matcher).perform(object : ViewAction {
             override fun getConstraints(): Matcher<View> {
-                return ViewMatchers.isAssignableFrom(TextView::class.java)
+                return isAssignableFrom(TextView::class.java)
             }
 
             override fun getDescription(): String {
@@ -41,29 +44,27 @@ open class BasePage {
 
     protected fun clickWithWait(view: Matcher<View>) {
         waitFor(view)
-        onView(view).perform(ViewActions.click())
+        onView(view).perform(click())
     }
 
     protected fun waitFor(viewToMatch: Matcher<View>) {
-        val timeoutInMilliseconds = 2000L
-        val pollInterval = 250L
         var counter = 0L
         do {
             try {
                 onView(viewToMatch)
-                    .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+                    .check(matches(isDisplayed()))
                 return
             } catch (_: NoMatchingViewException) {
-                onView(ViewMatchers.isRoot()).perform(TestUtil.waitOnId(pollInterval))
-                counter += 250
+                onView(isRoot()).perform(TestUtil.waitOnId(Long.MAX_VALUE))
+                counter += DefaultTestTimeouts.DEFAULT_POLL_INTERVAL.value
             }
-        } while (counter < timeoutInMilliseconds)
-        throw IllegalStateException("No view found in specified time: $timeoutInMilliseconds")
+        } while (counter < DefaultTestTimeouts.DEFAULT_TIMEOUT_IN_MILLISECONDS.value)
+        throw IllegalStateException("No view found in specified time: ${DefaultTestTimeouts.DEFAULT_TIMEOUT_IN_MILLISECONDS.value}")
     }
 
     protected fun isViewDisplayed(matcher: Matcher<View>): Boolean {
         try {
-            onView(matcher).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            onView(matcher).check(matches(isDisplayed()))
         } catch (e: NoMatchingViewException) {
             return false
         }

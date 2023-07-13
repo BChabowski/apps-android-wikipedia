@@ -30,8 +30,7 @@ class SearchTest : BaseTest() {
             clickSearchResultItemWithText(searchQuery)
         }
 
-        val isArticleDisplayed = articlePage.isArticleViewDisplayed()
-        assertTrue("Article is not visible", isArticleDisplayed)
+        assertTrue("Article is not visible", articlePage.isArticleViewDisplayed())
     }
 
     @Test
@@ -62,8 +61,7 @@ class SearchTest : BaseTest() {
             clickSearchResultItemWithText(searchQuery)
         }
 
-        val isArticleDisplayed = articlePage.isArticleViewDisplayed()
-        assertTrue("Article is not visible", isArticleDisplayed)
+        assertTrue("Article is not visible", articlePage.isArticleViewDisplayed())
     }
 
     @Test
