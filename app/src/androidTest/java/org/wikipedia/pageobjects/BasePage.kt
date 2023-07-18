@@ -1,5 +1,6 @@
 package org.wikipedia.pageobjects
 
+import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import androidx.test.espresso.Espresso
@@ -7,12 +8,17 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasDataString
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import junit.framework.AssertionFailedError
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matcher
 import org.wikipedia.TestUtil
 import org.wikipedia.testutils.DefaultTestTimeouts
@@ -20,6 +26,10 @@ import org.wikipedia.testutils.DefaultTestTimeouts
 open class BasePage {
     fun pressBack() {
         Espresso.pressBack()
+    }
+
+    fun hasIntentActionAndData(action: String, dataString: String): Boolean {
+        return isIntentPresent(hasAction(action), hasDataString(containsString(dataString)))
     }
 
     protected fun getText(matcher: Matcher<View>): String {
@@ -66,6 +76,15 @@ open class BasePage {
         try {
             onView(matcher).check(matches(isDisplayed()))
         } catch (e: NoMatchingViewException) {
+            return false
+        }
+        return true
+    }
+
+    protected fun isIntentPresent(vararg intentMatchers: Matcher<Intent>): Boolean {
+        try {
+            intended(allOf(intentMatchers.asIterable()))
+        } catch (a: AssertionFailedError) {
             return false
         }
         return true
