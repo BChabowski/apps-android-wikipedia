@@ -11,8 +11,10 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasDataString
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
@@ -20,6 +22,7 @@ import junit.framework.AssertionFailedError
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers
 import org.wikipedia.TestUtil
 import org.wikipedia.testutils.DefaultTestTimeouts
 
@@ -30,6 +33,22 @@ open class BasePage {
 
     fun hasIntentActionAndData(action: String, dataString: String): Boolean {
         return isIntentPresent(hasAction(action), hasDataString(containsString(dataString)))
+    }
+
+    fun hasIntentActionAndExtraIntent(
+        action: String,
+        extraIntentAction: String,
+        extraIntentDataString: String
+    ): Boolean {
+        val extraIntent = Matchers.allOf(
+            hasAction(extraIntentAction), hasDataString(
+                containsString(extraIntentDataString)
+            )
+        )
+        return isIntentPresent(
+            hasAction(action),
+            hasExtra(Intent.EXTRA_INTENT, extraIntent)
+        )
     }
 
     protected fun getText(matcher: Matcher<View>): String {
@@ -81,7 +100,7 @@ open class BasePage {
         return true
     }
 
-    protected fun isIntentPresent(vararg intentMatchers: Matcher<Intent>): Boolean {
+    private fun isIntentPresent(vararg intentMatchers: Matcher<Intent>): Boolean {
         try {
             intended(allOf(intentMatchers.asIterable()))
         } catch (a: AssertionFailedError) {

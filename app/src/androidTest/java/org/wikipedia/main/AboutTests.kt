@@ -57,7 +57,7 @@ class AboutTests : BaseTest() {
     }
 
     @Test
-    fun sendFeedbackButtonOpensDefaultMailApp() {
+    fun sendFeedbackButtonSendsCorrectIntent() {
         mainPage.run {
             clickMoreBottomBarButton()
             clickSettingsBottomBarButton()
@@ -72,7 +72,7 @@ class AboutTests : BaseTest() {
     }
 
     @Test
-    fun faqLinkInAboutSectionOfSettingsOpensCorrectWebsite() {
+    fun faqLinkInAboutSectionOfSettingsSendsCorrectIntent() {
         mainPage.run {
             clickMoreBottomBarButton()
             clickSettingsBottomBarButton()
@@ -85,7 +85,7 @@ class AboutTests : BaseTest() {
     }
 
     @Test
-    fun privacyPolicyLinkInAboutSectionOfSettingsOpensCorrectWebsite() {
+    fun privacyPolicyLinkInAboutSectionOfSettingsSendsCorrectIntent() {
         mainPage.run {
             clickMoreBottomBarButton()
             clickSettingsBottomBarButton()
@@ -98,7 +98,7 @@ class AboutTests : BaseTest() {
     }
 
     @Test
-    fun termsOfUseLinkInAboutSectionOfSettingsOpensCorrectWebsite() {
+    fun termsOfUseLinkInAboutSectionOfSettingsSendsCorrectIntent() {
         mainPage.run {
             clickMoreBottomBarButton()
             clickSettingsBottomBarButton()
@@ -111,15 +111,18 @@ class AboutTests : BaseTest() {
     }
 
     @Test
-    fun donateOpensCorrectWebsite() {
+    fun donateButtonSendsCorrectIntent() {
         mainPage.run {
             clickMoreBottomBarButton()
             clickDonateBottomBarButton()
         }
         assertTrue(
             "Intent not send after Donate button click",
-            //uses ACTION_CHOOSER Intent
-            mainPage.isIntentSentAfterDonateButtonClick()
+            mainPage.hasIntentActionAndExtraIntent(
+                action = ACTION_CHOOSER,
+                extraIntentAction = ACTION_VIEW,
+                extraIntentDataString = "https://donate.wikimedia.org/"
+            )
         )
     }
 }

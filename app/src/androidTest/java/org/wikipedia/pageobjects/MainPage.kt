@@ -35,16 +35,4 @@ class MainPage : BasePage() {
     fun clickDonateBottomBarButton() {
         onView(donateButtonMatcher).perform(click())
     }
-
-    fun isIntentSentAfterDonateButtonClick(): Boolean {
-        val extraIntent = allOf(
-            IntentMatchers.hasAction(Intent.ACTION_VIEW), IntentMatchers.hasDataString(
-                containsString("https://donate.wikimedia.org/")
-            )
-        )
-        return isIntentPresent(
-            IntentMatchers.hasAction(Intent.ACTION_CHOOSER),
-            IntentMatchers.hasExtra(Intent.EXTRA_INTENT, extraIntent)
-        )
-    }
 }
