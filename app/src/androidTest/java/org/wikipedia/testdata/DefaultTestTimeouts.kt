@@ -1,4 +1,4 @@
-package org.wikipedia.testutils
+package org.wikipedia.testdata
 
 enum class DefaultTestTimeouts(val value: Long) {
     DEFAULT_TIMEOUT_IN_MILLISECONDS(2000L),

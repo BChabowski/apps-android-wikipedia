@@ -3,17 +3,14 @@ package org.wikipedia
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.Instrumentation.ActivityResult
-import android.content.Intent
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.intent.matcher.IntentMatchers.isInternal
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import org.hamcrest.CoreMatchers.anyOf
-import org.hamcrest.Matcher
+import org.hamcrest.CoreMatchers.not
 import org.junit.runner.RunWith
 import org.wikipedia.main.MainActivity
 
@@ -39,13 +36,8 @@ open class BaseTest {
         launchActivityWithPreferences(MainActivity::class.java, preferencesEditor)
     }
 
-    protected fun mockIntentsWithActions(vararg intentActions: String) {
-        var intentMatchers = mutableListOf<Matcher<Intent>>()
-        intentActions.forEach { e ->
-            intentMatchers.add(hasAction(e))
-        }
-        Intents.init()
-        intending(anyOf(intentMatchers.asIterable()))
+    protected fun mockOutsideIntents() {
+        intending(not(isInternal()))
             .respondWith(ActivityResult(RESULT_OK, null))
     }
 }

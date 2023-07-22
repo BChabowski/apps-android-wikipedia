@@ -3,8 +3,10 @@ package org.wikipedia.main
 import android.content.Intent.ACTION_CHOOSER
 import android.content.Intent.ACTION_SENDTO
 import android.content.Intent.ACTION_VIEW
+import androidx.test.espresso.intent.Intents
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -12,6 +14,13 @@ import org.wikipedia.BaseTest
 import org.wikipedia.pageobjects.AboutPage
 import org.wikipedia.pageobjects.MainPage
 import org.wikipedia.pageobjects.SettingsPage
+import org.wikipedia.testdata.LinkPaths.Companion.DONATE_PATH
+import org.wikipedia.testdata.LinkPaths.Companion.FAQ_PATH
+import org.wikipedia.testdata.LinkPaths.Companion.PRIVACY_POLICY_PATH
+import org.wikipedia.testdata.LinkPaths.Companion.SEND_FEEDBACK_PATH
+import org.wikipedia.testdata.LinkPaths.Companion.TERMS_OF_USE_PATH
+import org.wikipedia.testutils.hasIntentActionAndData
+import org.wikipedia.testutils.hasIntentActionAndExtraIntent
 
 class AboutTests : BaseTest() {
     private val mainPage = MainPage()
@@ -21,7 +30,13 @@ class AboutTests : BaseTest() {
     @Before
     fun startActivity() {
         launchMainActivityWithDefaultPreferences()
-        mockIntentsWithActions(ACTION_CHOOSER, ACTION_SENDTO, ACTION_VIEW)
+        Intents.init()
+        mockOutsideIntents()
+    }
+
+    @After
+    fun cleanUp() {
+        Intents.release()
     }
 
     @Test
@@ -67,7 +82,7 @@ class AboutTests : BaseTest() {
         aboutPage.clickSendAppFeedbackButton()
         assertTrue(
             "Intent not send after Send feedback button click",
-            aboutPage.hasIntentActionAndData(ACTION_SENDTO, "mailto:")
+            hasIntentActionAndData(ACTION_SENDTO, SEND_FEEDBACK_PATH)
         )
     }
 
@@ -80,7 +95,7 @@ class AboutTests : BaseTest() {
         settingsPage.clickWikipediaAppFaqLink()
         assertTrue(
             "Intent not send after FAQ link click",
-            settingsPage.hasIntentActionAndData(ACTION_VIEW, "https://m.mediawiki.org/")
+            hasIntentActionAndData(ACTION_VIEW, FAQ_PATH)
         )
     }
 
@@ -93,7 +108,7 @@ class AboutTests : BaseTest() {
         settingsPage.clickPrivacyPolicyLink()
         assertTrue(
             "Intent not send after Privacy policy link click",
-            settingsPage.hasIntentActionAndData(ACTION_VIEW, "https://foundation.wikimedia.org/")
+            hasIntentActionAndData(ACTION_VIEW, PRIVACY_POLICY_PATH)
         )
     }
 
@@ -106,7 +121,7 @@ class AboutTests : BaseTest() {
         settingsPage.clickTermsOfUseLink()
         assertTrue(
             "Intent not send after Terms of use link click",
-            settingsPage.hasIntentActionAndData(ACTION_VIEW, "https://foundation.wikimedia.org/")
+            hasIntentActionAndData(ACTION_VIEW, TERMS_OF_USE_PATH)
         )
     }
 
@@ -118,10 +133,10 @@ class AboutTests : BaseTest() {
         }
         assertTrue(
             "Intent not send after Donate button click",
-            mainPage.hasIntentActionAndExtraIntent(
+            hasIntentActionAndExtraIntent(
                 action = ACTION_CHOOSER,
                 extraIntentAction = ACTION_VIEW,
-                extraIntentDataString = "https://donate.wikimedia.org/"
+                extraIntentDataString = DONATE_PATH
             )
         )
     }
