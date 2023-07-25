@@ -1,10 +1,10 @@
-package org.wikipedia.search
+package org.wikipedia.e2etests.search
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.wikipedia.BaseTest
+import org.wikipedia.e2etests.BaseTest
 import org.wikipedia.pageobjects.ArticlePage
 import org.wikipedia.pageobjects.MainPage
 import org.wikipedia.pageobjects.SearchPage
@@ -23,11 +23,11 @@ class SearchTest : BaseTest() {
     fun searchAndDisplayArticle() {
         val searchQuery = "Barack Obama"
 
-        mainPage.clickSearchBar()
+        mainPage.tapSearchBar()
 
         searchPage.run {
             typeIntoSearchBar(searchQuery)
-            clickSearchResultItemWithText(searchQuery)
+            tapSearchResultItemWithText(searchQuery)
         }
 
         assertTrue("Article is not visible", articlePage.isArticleViewDisplayed())
@@ -37,7 +37,7 @@ class SearchTest : BaseTest() {
     fun searchNotExistingArticle() {
         val notExistingArticle = "articlenotexisting"
 
-        mainPage.clickSearchBar()
+        mainPage.tapSearchBar()
 
         val searchListText = searchPage.run {
             typeIntoSearchBar(notExistingArticle)
@@ -52,13 +52,13 @@ class SearchTest : BaseTest() {
         val languageAbbreviation = "RU"
         val searchQuery = "Обама, Барак"
 
-        mainPage.clickSearchBar()
+        mainPage.tapSearchBar()
 
         searchPage.run {
             addSearchLanguage(language)
             putIntoSearchBar(searchQuery)
             changeSearchLanguage(languageAbbreviation)
-            clickSearchResultItemWithText(searchQuery)
+            tapSearchResultItemWithText(searchQuery)
         }
 
         assertTrue("Article is not visible", articlePage.isArticleViewDisplayed())
@@ -69,18 +69,18 @@ class SearchTest : BaseTest() {
         val firstSearchQuery = "Barack Obama"
         val secondSearchQuery = "Joe Biden"
 
-        mainPage.clickSearchBar()
+        mainPage.tapSearchBar()
 
         searchPage.run {
             typeIntoSearchBar(firstSearchQuery)
-            clickSearchResultItemWithText(firstSearchQuery)
+            tapSearchResultItemWithText(firstSearchQuery)
         }
 
         articlePage.pressBack()
 
         searchPage.run {
             typeIntoSearchBar(secondSearchQuery)
-            clickSearchResultItemWithText(secondSearchQuery)
+            tapSearchResultItemWithText(secondSearchQuery)
         }
 
         articlePage.pressBack()

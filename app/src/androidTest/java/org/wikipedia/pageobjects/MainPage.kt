@@ -1,13 +1,10 @@
 package org.wikipedia.pageobjects
 
-import android.content.Intent
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.containsString
 import org.wikipedia.R
 
 class MainPage : BasePage() {
@@ -20,19 +17,19 @@ class MainPage : BasePage() {
         withId(R.id.main_drawer_settings_container)
     private val donateButtonMatcher = withId(R.id.main_drawer_donate_container)
 
-    fun clickSearchBar() {
+    fun tapSearchBar() {
         onView(searchBarMatcher).perform(click())
     }
 
-    fun clickMoreBottomBarButton() {
+    fun tapMoreBottomBarButton() {
         onView(bottomBarMoreMatcher).perform(click())
     }
 
-    fun clickSettingsBottomBarButton() {
+    fun tapSettingsBottomBarButton() {
         onView(settingsButtonMatcher).perform(click())
     }
 
-    fun clickDonateBottomBarButton() {
+    fun tapDonateBottomBarButton() {
         onView(donateButtonMatcher).perform(click())
     }
 }
