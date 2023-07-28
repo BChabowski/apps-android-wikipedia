@@ -1,4 +1,4 @@
-package org.wikipedia.main
+package org.wikipedia.e2etests.main
 
 import android.content.Intent.ACTION_CHOOSER
 import android.content.Intent.ACTION_SENDTO
@@ -10,7 +10,7 @@ import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.wikipedia.BaseTest
+import org.wikipedia.e2etests.BaseTest
 import org.wikipedia.pageobjects.AboutPage
 import org.wikipedia.pageobjects.MainPage
 import org.wikipedia.pageobjects.SettingsPage
@@ -42,10 +42,10 @@ class AboutTests : BaseTest() {
     @Test
     fun allSectionsInAboutAreDisplayed() {
         mainPage.run {
-            clickMoreBottomBarButton()
-            clickSettingsBottomBarButton()
+            tapMoreBottomBarButton()
+            tapSettingsBottomBarButton()
         }
-        settingsPage.clickAbout()
+        settingsPage.tapAbout()
 
         aboutPage.waitUntilAboutPageIsDisplayed()
         assertTrue("Not all sections are properly displayed", aboutPage.areAllSectionsDisplayed())
@@ -55,10 +55,10 @@ class AboutTests : BaseTest() {
     fun allSectionsInAboutAreDisplayedAfterPhoneOrientationChange() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         mainPage.run {
-            clickMoreBottomBarButton()
-            clickSettingsBottomBarButton()
+            tapMoreBottomBarButton()
+            tapSettingsBottomBarButton()
         }
-        settingsPage.clickAbout()
+        settingsPage.tapAbout()
 
         device.setOrientationRight()
 
@@ -74,12 +74,12 @@ class AboutTests : BaseTest() {
     @Test
     fun sendFeedbackButtonSendsCorrectIntent() {
         mainPage.run {
-            clickMoreBottomBarButton()
-            clickSettingsBottomBarButton()
+            tapMoreBottomBarButton()
+            tapSettingsBottomBarButton()
         }
-        settingsPage.clickAbout()
+        settingsPage.tapAbout()
 
-        aboutPage.clickSendAppFeedbackButton()
+        aboutPage.tapSendAppFeedbackButton()
         assertTrue(
             "Intent not send after Send feedback button click",
             hasIntentActionAndData(ACTION_SENDTO, SEND_FEEDBACK_PATH)
@@ -89,10 +89,10 @@ class AboutTests : BaseTest() {
     @Test
     fun faqLinkInAboutSectionOfSettingsSendsCorrectIntent() {
         mainPage.run {
-            clickMoreBottomBarButton()
-            clickSettingsBottomBarButton()
+            tapMoreBottomBarButton()
+            tapSettingsBottomBarButton()
         }
-        settingsPage.clickWikipediaAppFaqLink()
+        settingsPage.tapWikipediaAppFaqLink()
         assertTrue(
             "Intent not send after FAQ link click",
             hasIntentActionAndData(ACTION_VIEW, FAQ_PATH)
@@ -102,10 +102,10 @@ class AboutTests : BaseTest() {
     @Test
     fun privacyPolicyLinkInAboutSectionOfSettingsSendsCorrectIntent() {
         mainPage.run {
-            clickMoreBottomBarButton()
-            clickSettingsBottomBarButton()
+            tapMoreBottomBarButton()
+            tapSettingsBottomBarButton()
         }
-        settingsPage.clickPrivacyPolicyLink()
+        settingsPage.tapPrivacyPolicyLink()
         assertTrue(
             "Intent not send after Privacy policy link click",
             hasIntentActionAndData(ACTION_VIEW, PRIVACY_POLICY_PATH)
@@ -115,10 +115,10 @@ class AboutTests : BaseTest() {
     @Test
     fun termsOfUseLinkInAboutSectionOfSettingsSendsCorrectIntent() {
         mainPage.run {
-            clickMoreBottomBarButton()
-            clickSettingsBottomBarButton()
+            tapMoreBottomBarButton()
+            tapSettingsBottomBarButton()
         }
-        settingsPage.clickTermsOfUseLink()
+        settingsPage.tapTermsOfUseLink()
         assertTrue(
             "Intent not send after Terms of use link click",
             hasIntentActionAndData(ACTION_VIEW, TERMS_OF_USE_PATH)
@@ -128,8 +128,8 @@ class AboutTests : BaseTest() {
     @Test
     fun donateButtonSendsCorrectIntent() {
         mainPage.run {
-            clickMoreBottomBarButton()
-            clickDonateBottomBarButton()
+            tapMoreBottomBarButton()
+            tapDonateBottomBarButton()
         }
         assertTrue(
             "Intent not send after Donate button click",

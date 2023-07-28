@@ -20,17 +20,14 @@ class SearchPage : BasePage() {
     private val searchBarMatcher = withHint("Search Wikipedia")
     private val searchResultListMatcher =
         allOf(withId(R.id.search_results_list), isDisplayed())
-
     private fun searchResultListItemMatcher(itemText: String) =
         allOf(searchResultListMatcher, hasDescendant(withText(itemText)))
-
     private val emptySearchResultsMessageMatcher = withId(R.id.results_text)
     private val addNewLanguageSearchButtonMatcher = withId(R.id.search_lang_button)
     private val addNewLanguageButtonMatcher = withText("Add language")
     private val languagesListMatcher = withId(R.id.languages_list_recycler)
     private fun searchLanguageButtonMatcher(languageAbbreviation: String) =
         withText(languageAbbreviation)
-
     private fun searchHistoryListItemMatcher(itemText: String) =
         allOf(withText(itemText), withParent(withId(R.id.recent_searches_recycler)))
 
@@ -61,11 +58,11 @@ class SearchPage : BasePage() {
     }
 
     fun changeSearchLanguage(languageAbbreviation: String) {
-        clickWithWait(searchLanguageButtonMatcher(languageAbbreviation))
+        tapWithWait(searchLanguageButtonMatcher(languageAbbreviation))
     }
 
-    fun clickSearchResultItemWithText(text: String) {
-        clickWithWait(searchResultListItemMatcher(text))
+    fun tapSearchResultItemWithText(text: String) {
+        tapWithWait(searchResultListItemMatcher(text))
     }
 
     fun getResultsListText(): String {

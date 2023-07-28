@@ -1,4 +1,4 @@
-package org.wikipedia
+package org.wikipedia.testutils
 
 import android.graphics.drawable.ColorDrawable
 import android.view.View

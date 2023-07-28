@@ -13,7 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import org.hamcrest.Matcher
-import org.wikipedia.TestUtil
+import org.wikipedia.testutils.TestUtil
 import org.wikipedia.testdata.DefaultTestTimeouts
 
 open class BasePage {
@@ -41,7 +41,7 @@ open class BasePage {
         return text
     }
 
-    protected fun clickWithWait(view: Matcher<View>) {
+    protected fun tapWithWait(view: Matcher<View>) {
         waitFor(view)
         onView(view).perform(click())
     }

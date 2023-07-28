@@ -1,4 +1,4 @@
-package org.wikipedia
+package org.wikipedia.e2etests
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK
